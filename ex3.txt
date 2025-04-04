@@ -1,0 +1,309 @@
+mysql> create database vikram;
+Query OK, 1 row affected 
+
+EX:3- built-in functions, order by, group by 
+mysql> use vikram
+Database changed
+a. Write a query to create a table cust with the following structure
+cust_no int(4) PRIMARY KEY,
+last_name VARCHAR(20),
+first_name VARCHAR(20) NOT NULL,
+age int(2),
+state VARCHAR(20),
+assets int,
+birth_date DATE,
+status VARCHAR(1),
+CHECK (status IN (‘V’, ‘I’, ‘A’)) 
+
+mysql> CREATE TABLE cust (
+    ->     cust_no INT PRIMARY KEY,
+    ->     last_name VARCHAR(20),
+    ->     first_name VARCHAR(20) NOT NULL,
+    ->     age INT CHECK (age BETWEEN 0 AND 99),
+    ->     state VARCHAR(20),
+    ->     assets INT,
+    ->     birth_date DATE,
+    ->     status CHAR(1) CHECK (status IN ('V', 'I', 'A'))
+    -> );
+Query OK, 0 rows affected 
+
+b. Write a query to insert the following records into the cust table
++-------+-----------+------------+----+----------+-------+------------+-------+
+|CUST_NO| LAST_ NAME| FIRST_ NAME| AGE| STATE    | Assets|  BIRTH DATE| STATUS|
++-------+-----------+------------+----+----------+-------+------------+-------+
+|1001   | Praveen   | Kanishk    | 31 |Karnataka | 45000 | 12-DEC-92  |  A    |
+|1002   | Kumar     | Arun       | 53 |Karnataka | 34500 | 1-AUG-70   |  V    |
+|1003   | Raj       | Praveen    | 32 |Tamil Nadu| 40300 | 12-FEB-91  |  A    |
+|1004   | Kutty     | RAJAN      | 26 |Kerala    | 67001 | 9-JUN-97   |  A    |
+|1005   | Latha     | SHILPA     | 33 |Kerala    | 57415 | 11-DEC-90  |  I    |
++-------+-----------+------------+----+----------+-------+------------+-------+
+mysql> INSERT INTO cust VALUES 
+    -> (1001, 'Praveen', 'Kanishk', 31, 'Karnataka', 45000, '1992-12-12', 'A'),
+    -> (1002, 'Kumar', 'Arun', 53, 'Karnataka', 34500, '1970-08-01', 'V'),
+    -> (1003, 'Raj', 'Praveen', 32, 'Tamil Nadu', 40300, '1991-02-12', 'A'),
+    -> (1004, 'Kutty', 'RAJAN', 26, 'Kerala', 67001, '1997-06-09', 'A'),
+    -> (1005, 'Latha', 'SHILPA', 33, 'Kerala', 57415, '1990-12-11', 'I');
+Query OK, 5 rows affected
+
+
+
+mysql> select * from cust;
++---------+-----------+------------+------+------------+--------+------------+--------+
+| cust_no | last_name | first_name | age  | state      | assets | birth_date | status |
++---------+-----------+------------+------+------------+--------+------------+--------+
+|    1001 | Praveen   | Kanishk    |   31 | Karnataka  |  45000 | 1992-12-12 | A      |
+|    1002 | Kumar     | Arun       |   53 | Karnataka  |  34500 | 1970-08-01 | V      |
+|    1003 | Raj       | Praveen    |   32 | Tamil Nadu |  40300 | 1991-02-12 | A      |
+|    1004 | Kutty     | RAJAN      |   26 | Kerala     |  67001 | 1997-06-09 | A      |
+|    1005 | Latha     | SHILPA     |   33 | Kerala     |  57415 | 1990-12-11 | I      |
++---------+-----------+------------+------+------------+--------+------------+--------+
+
+
+1. Display all the customer’s details in which the youngest customer details should appear first and eldest customer details should come at last. 
+
+mysql> SELECT * FROM cust ORDER BY age;
++---------+-----------+------------+------+------------+--------+------------+--------+
+| cust_no | last_name | first_name | age  | state      | assets | birth_date | status |
++---------+-----------+------------+------+------------+--------+------------+--------+
+|    1004 | Kutty     | RAJAN      |   26 | Kerala     |  67001 | 1997-06-09 | A      |
+|    1001 | Praveen   | Kanishk    |   31 | Karnataka  |  45000 | 1992-12-12 | A      |
+|    1003 | Raj       | Praveen    |   32 | Tamil Nadu |  40300 | 1991-02-12 | A      |
+|    1005 | Latha     | SHILPA     |   33 | Kerala     |  57415 | 1990-12-11 | I      |
+|    1002 | Kumar     | Arun       |   53 | Karnataka  |  34500 | 1970-08-01 | V      |
++---------+-----------+------------+------+------------+--------+------------+--------+
+
+
+2. Display all the customer’s details where the customer’s birth dates are arranged according to the latest to oldest.
+mysql> select * from cust order by birth_date DESC;
++---------+-----------+------------+------+------------+--------+------------+--------+
+| cust_no | last_name | first_name | age  | state      | assets | birth_date | status |
++---------+-----------+------------+------+------------+--------+------------+--------+
+|    1004 | Kutty     | RAJAN      |   26 | Kerala     |  67001 | 1997-06-09 | A      |
+|    1001 | Praveen   | Kanishk    |   31 | Karnataka  |  45000 | 1992-12-12 | A      |
+|    1003 | Raj       | Praveen    |   32 | Tamil Nadu |  40300 | 1991-02-12 | A      |
+|    1005 | Latha     | SHILPA     |   33 | Kerala     |  57415 | 1990-12-11 | I      |
+|    1002 | Kumar     | Arun       |   53 | Karnataka  |  34500 | 1970-08-01 | V      |
++---------+-----------+------------+------+------------+--------+------------+--------+
+
+
+3. Display the average age of customers 
+mysql> SELECT AVG(age) FROM cust;
++----------+
+| AVG(age) |
++----------+
+|  35.0000 |
++----------+
+
+
+ 
+mysql> select * from cust;
++---------+-----------+------------+------+------------+--------+------------+--------+
+| cust_no | last_name | first_name | age  | state      | assets | birth_date | status |
++---------+-----------+------------+------+------------+--------+------------+--------+
+|    1001 | Praveen   | Kanishk    |   31 | Karnataka  |  45000 | 1992-12-12 | A      |
+|    1002 | Kumar     | Arun       |   53 | Karnataka  |  34500 | 1970-08-01 | V      |
+|    1003 | Raj       | Praveen    |   32 | Tamil Nadu |  40300 | 1991-02-12 | A      |
+|    1004 | Kutty     | RAJAN      |   26 | Kerala     |  67001 | 1997-06-09 | A      |
+|    1005 | Latha     | SHILPA     |   33 | Kerala     |  57415 | 1990-12-11 | I      |
++---------+-----------+------------+------+------------+--------+------------+--------+
+
+
+4. Display how many customer details are available in the cust table. 
+mysql> SELECT COUNT(*) FROM cust;
++----------+
+| COUNT(*) |
++----------+
+|        5 |
++----------+
+
+
+5. Display the youngest customer’s age. 
+mysql> SELECT MIN(age) FROM cust;
++----------+
+| MIN(age) |
++----------+
+|       26 |
++----------+
+
+
+6. Display the eldest customer’s age.
+mysql> SELECT MAX(age) FROM cust;
++----------+
+| MAX(age) |
++----------+
+|       53 |
++----------+
+
+
+7. Display customer’s first name, state whose birthday falls in the month of December.
+mysql> SELECT first_name, state FROM cust WHERE MONTH(birth_date) = 12;
++------------+-----------+
+| first_name | state     |
++------------+-----------+
+| Kanishk    | Karnataka |
+| SHILPA     | Kerala    |
++------------+-----------+
+
+
+8. Display the customer’s first name, last name and concatenated value of first name and second name together.
+mysql> SELECT first_name, last_name, CONCAT(first_name, ' ', last_name) AS full_name FROM cust;
++------------+-----------+-----------------+
+| first_name | last_name | full_name       |
++------------+-----------+-----------------+
+| Kanishk    | Praveen   | Kanishk Praveen |
+| Arun       | Kumar     | Arun Kumar      |
+| Praveen    | Raj       | Praveen Raj     |
+| RAJAN      | Kutty     | RAJAN Kutty     |
+| SHILPA     | Latha     | SHILPA Latha    |
++------------+-----------+-----------------+
+
+
+9. Display the customer’s first name, DOB in the format "DD/MONTH/YYYY". 
+mysql> SELECT first_name, DATE_FORMAT(birth_date, '%d/%M/%Y') FROM cust;
++------------+-------------------------------------+
+| first_name | DATE_FORMAT(birth_date, '%d/%M/%Y') |
++------------+-------------------------------------+
+| Kanishk    | 12/December/1992                    |
+| Arun       | 01/August/1970                      |
+| Praveen    | 12/February/1991                    |
+| RAJAN      | 09/June/1997                        |
+| SHILPA     | 11/December/1990                    |
++------------+-------------------------------------+
+
+
+10. Display the number of month of customers since their date of birth as of now.
+mysql> SELECT first_name, TIMESTAMPDIFF(MONTH, birth_date, CURDATE()) FROM cust; 
++------------+---------------------------------------------+
+| first_name | TIMESTAMPDIFF(MONTH, birth_date, CURDATE()) |
++------------+---------------------------------------------+
+| Kanishk    |                                         385 |
+| Arun       |                                         654 |
+| Praveen    |                                         407 |
+| RAJAN      |                                         331 |
+| SHILPA     |                                         409 |
++------------+---------------------------------------------+
+
+
+11. Display the customer’s first name and the position of the letter ‘a’
+mysql> SELECT first_name, LOCATE('a', LOWER(first_name)) FROM cust;
++------------+--------------------------------+
+| first_name | LOCATE('a', LOWER(first_name)) |
++------------+--------------------------------+
+| Kanishk    |                              2 |
+| Arun       |                              1 |
+| Praveen    |                              3 |
+| RAJAN      |                              2 |
+| SHILPA     |                              6 |
++------------+--------------------------------+
+
+
+12. Display the length of the customer’s state 
+mysql> SELECT state, LENGTH(state) FROM cust;
++------------+---------------+
+| state      | LENGTH(state) |
++------------+---------------+
+| Karnataka  |             9 |
+| Karnataka  |             9 |
+| Tamil Nadu |            10 |
+| Kerala     |             6 |
+| Kerala     |             6 |
++------------+---------------+
+
+
+13. Display all customer’s first name with letter ‘a’ instead of ‘A’ 
+mysql> SELECT first_name, REPLACE(first_name, 'A', 'a') FROM cust;
++------------+-------------------------------+
+| first_name | REPLACE(first_name, 'A', 'a') |
++------------+-------------------------------+
+| Kanishk    | Kanishk                       |
+| Arun       | arun                          |
+| Praveen    | Praveen                       |
+| RAJAN      | RaJaN                         |
+| SHILPA     | SHILPa                        |
++------------+-------------------------------+
+
+
+14. Display the first four characters of customer’s state
+mysql> SELECT state, LEFT(state, 4) FROM cust;
++------------+----------------+
+| state      | LEFT(state, 4) |
++------------+----------------+
+| Karnataka  | Karn           |
+| Karnataka  | Karn           |
+| Tamil Nadu | Tami           |
+| Kerala     | Kera           |
+| Kerala     | Kera           |
++------------+----------------+
+
+
+15. Display the customer's first name all in capitals
+mysql> SELECT UPPER(first_name) FROM cust;
++-------------------+
+| UPPER(first_name) |
++-------------------+
+| KANISHK           |
+| ARUN              |
+| PRAVEEN           |
+| RAJAN             |
+| SHILPA            |
++-------------------+
+
+
+16. Display the number of customers from each state 
+mysql> SELECT state, COUNT(*) FROM cust GROUP BY state;
++------------+----------+
+| state      | COUNT(*) |
++------------+----------+
+| Karnataka  |        2 |
+| Tamil Nadu |        1 |
+| Kerala     |        2 |
++------------+----------+
+
+
+17. Display the customer’s average asset for each state
+mysql> SELECT state, AVG(assets) FROM cust GROUP BY state;
++------------+-------------+
+| state      | AVG(assets) |
++------------+-------------+
+| Karnataka  |  39750.0000 |
+| Tamil Nadu |  40300.0000 |
+| Kerala     |  62208.0000 |
++------------+-------------+
+
+
+18. Display the customer’s average age for each state in which the average age should be less than 35 
+mysql> SELECT state, AVG(age) FROM cust GROUP BY state HAVING AVG(age) < 35;
++------------+----------+
+| state      | AVG(age) |
++------------+----------+
+| Tamil Nadu |  32.0000 |
+| Kerala     |  29.5000 |
++------------+----------+
+
+
+19. Display the customer’s total asset for each state
+mysql> SELECT state, SUM(assets) FROM cust GROUP BY state;
++------------+-------------+
+| state      | SUM(assets) |
++------------+-------------+
+| Karnataka  |       79500 |
+| Tamil Nadu |       40300 |
+| Kerala     |      124416 |
++------------+-------------+
+
+
+20. Display the number customers born in every year
+mysql> SELECT YEAR(birth_date), COUNT(*) FROM cust GROUP BY YEAR(birth_date);
++------------------+----------+
+| YEAR(birth_date) | COUNT(*) |
++------------------+----------+
+|             1992 |        1 |
+|             1970 |        1 |
+|             1991 |        1 |
+|             1997 |        1 |
+|             1990 |        1 |
++------------------+----------+
+
+
+
+
